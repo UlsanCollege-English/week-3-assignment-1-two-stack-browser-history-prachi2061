@@ -1,24 +1,33 @@
 
-### /src/history.py (starter)
-
 class BrowserHistory:
     def __init__(self, start="home"):
-        # TODO: choose your internal representation (two stacks)
         self._cur = start
-        self._back = []   # TODO
-        self._fwd = []    # TODO
+        self._back = []
+        self._fwd = []
+        self._started = False
 
     def visit(self, url: str) -> None:
-        # TODO: push current to back, set current, clear forward
-        raise NotImplementedError
+        if self._started:
+            self._back.append(self._cur)
+        self._cur = url
+        self._fwd.clear()
+        self._started = True
 
     def back(self) -> str:
-        # TODO: move to previous page; decide error behavior on underflow
-        raise NotImplementedError
+        if not self._back:
+            raise IndexError("No more pages in back history")
+        self._fwd.append(self._cur)
+        self._cur = self._back.pop()
+        return self._cur
 
     def forward(self) -> str:
-        # TODO: move to next page; decide error behavior on underflow
-        raise NotImplementedError
+        if not self._fwd:
+            raise IndexError("No more pages in forward history")
+        self._back.append(self._cur)
+        self._cur = self._fwd.pop()
+        return self._cur
 
     def current(self) -> str:
         return self._cur
+
+
